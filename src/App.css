@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Inria Sans", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+.App {
+  text-align: center;
+}
+:root{
+  --mainColor: #29335C;
+  --mainColorLight: #5767aa;
+  --secondaryColor:#DB2839;
+  --textColor:#eee;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  padding: 0 2rem;
+  background-color: var(--mainColor);
+  color: var(--textColor);
+  position: sticky;     /* Make the navbar sticky */
+  top: 0;               /* Stick the navbar at the top of the viewport */
+  z-index: 1000; 
+}
+div .logo-image{
+  background-color: #eee;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+}
+img .logo{
+  width: 100px;
+}
+nav a{
+  margin: 0 2rem;
+  color: var(--textColor);
+  text-decoration: none;
+  font-size: 1.3rem;
+}
+nav a:hover{
+  color: var(--secondaryColor);
+}
+header .nav-btn{
+  padding: 5px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--textColor);
+  visibility: hidden;
+  opacity: 0;
+  font-size: 1.6rem;
+}
+@media only screen and (max-width:1024px){
+  header .nav-btn{
+    visibility: visible;
+    opacity: 1;
+  }
+  header nav{
+    position: fixed;
+    top: 20px;
+    left: 0;
+    padding-bottom: 20px;
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    gap: 1.5rem;
+    background-color: var(--mainColor);
+    transition: 1s;
+    transform: translateY(-100vh);
+  }
+  header .responsive_nav{
+    transform: none;
+  }
+  nav .nav-close-btn{
+    position: absolute;
+    top:0rem;
+    right:2rem;
+  }
+  nav a{
+    font-size: 1.5rem;
+  }
+}
+/* Section styles */
+.section {
+  padding: 5rem 2rem;  /* Larger padding for better spacing */
+  min-height: 100vh;   /* Ensures each section occupies the full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 1.5rem;
+  box-sizing: border-box;
+}
+
+#home {
+  background-color: #f0f0f0;
+}
+.li{
+  text-align: left;
+}
+#about,#contact {
+  background-color: #e0e0e0;
+}
+
+/* Heading styles */
+.section h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* Paragraph styles */
+.section p {
+  font-size: 1.25rem;
+  text-align: center;
+  max-width: 800px;
+  line-height: 1.6;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .section {
+    padding: 4rem 1.5rem;
+    font-size: 1.25rem;
+  }
+
+  .section h1 {
+    font-size: 2.5rem;
+  }
+
+  .section p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 3rem 1rem;
+    font-size: 1rem;
+  }
+
+  .section h1 {
+    font-size: 2rem;
+  }
+
+  .section p {
+    font-size: 1rem;
+  }
+}
