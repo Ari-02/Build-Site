@@ -6,14 +6,21 @@ import { Bell, Moon, Sun } from 'lucide-react';
 import { requestNotificationPermission } from '../../utils/notifications';
 
 const Settings = () => {
-  const { pomodoroSettings, theme, toggleTheme } = useStore();
+  const { pomodoroSettings, updatePomodoroSettings, theme, toggleTheme } = useStore();
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(
     Notification.permission === 'granted'
   );
 
+  const workDurationOptions = Array.from({ length: 12 }, (_, i) => (i + 1) * 5);
+  const breakDurationOptions = Array.from({ length: 6 }, (_, i) => (i + 1) * 5);
+
   const handleNotificationToggle = async () => {
     const granted = await requestNotificationPermission();
     setNotificationsEnabled(granted);
+  };
+
+  const handleSettingChange = (setting: keyof typeof pomodoroSettings, value: number) => {
+    updatePomodoroSettings({ [setting]: value });
   };
 
   return (
@@ -55,36 +62,34 @@ const Settings = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Work Duration (minutes)
               </label>
-              <input
-                type="number"
+              <select
                 value={pomodoroSettings.workDuration}
+                onChange={(e) => handleSettingChange('workDuration', Number(e.target.value))}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600"
-              />
+              >
+                {workDurationOptions.map((duration) => (
+                  <option key={duration} value={duration}>
+                    {duration} minutes
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Break Duration (minutes)
               </label>
-              <input
-                type="number"
+              <select
                 value={pomodoroSettings.breakDuration}
+                onChange={(e) => handleSettingChange('breakDuration', Number(e.target.value))}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600"
-              />
+              >
+                {breakDurationOptions.map((duration) => (
+                  <option key={duration} value={duration}>
+                    {duration} minutes
+                  </option>
+                ))}
+              </select>
             </div>
-          </div>
-        </Card>
-
-        <Card title="Data Management">
-          <div className="space-y-4">
-            <Button variant="danger" onClick={() => {/* Implement data reset */}}>
-              Reset All Data
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => {/* Implement data export */}}
-            >
-              Export Data
-            </Button>
           </div>
         </Card>
       </div>

@@ -1,11 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useStore } from '../../store';
 import { Button } from '../shared/Button';
 import { HabitCard } from '../habits/HabitCard';
+import { HabitModal } from '../habits/HabitModal';
+import { Habit } from '../../types';
 
 const Habits = () => {
-  const { habits, updateHabit } = useStore();
+  const { habits, addHabit, updateHabit } = useStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
+
+  const handleAddHabit = (habitData: Partial<Habit>) => {
+    const newHabit: Habit = {
+      id: Date.now().toString(),
+      title: habitData.title!,
+      description: habitData.description,
+      frequency: habitData.frequency || 'daily',
+      streak: 0,
+      startDate: new Date(),
+      completedDates: [],
+    };
+    addHabit(newHabit);
+    setIsModalOpen(false);
+  };
+
+  const handleEditHabit = (habitData: Partial<Habit>) => {
+    if (editingHabit) {
+      updateHabit(editingHabit.id, habitData);
+      setEditingHabit(null);
+    }
+    setIsModalOpen(false);
+  };
 
   const handleHabitToggle = (habitId: string, date: Date) => {
     const habit = habits.find((h) => h.id === habitId);
@@ -25,7 +51,7 @@ const Habits = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Habits</h2>
-        <Button icon={Plus} onClick={() => {/* Implement add habit modal */}}>
+        <Button icon={Plus} onClick={() => setIsModalOpen(true)}>
           Add Habit
         </Button>
       </div>
@@ -36,9 +62,23 @@ const Habits = () => {
             key={habit.id}
             habit={habit}
             onToggle={handleHabitToggle}
+            onEdit={() => {
+              setEditingHabit(habit);
+              setIsModalOpen(true);
+            }}
           />
         ))}
       </div>
+
+      <HabitModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingHabit(null);
+        }}
+        onSubmit={editingHabit ? handleEditHabit : handleAddHabit}
+        initialData={editingHabit || undefined}
+      />
     </div>
   );
 };

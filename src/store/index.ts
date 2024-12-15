@@ -12,6 +12,7 @@ interface AppState {
   deleteTask: (taskId: string) => void;
   addHabit: (habit: Habit) => void;
   updateHabit: (habitId: string, updates: Partial<Habit>) => void;
+  updatePomodoroSettings: (updates: Partial<PomodoroSettings>) => void;
   toggleTheme: () => void;
 }
 
@@ -44,6 +45,10 @@ export const useStore = create<AppState>((set) => ({
       habits: state.habits.map((habit) =>
         habit.id === habitId ? { ...habit, ...updates } : habit
       ),
+    })),
+  updatePomodoroSettings: (updates) =>
+    set((state) => ({
+      pomodoroSettings: { ...state.pomodoroSettings, ...updates },
     })),
   toggleTheme: () =>
     set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
