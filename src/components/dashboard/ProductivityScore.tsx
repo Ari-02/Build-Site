@@ -1,23 +1,54 @@
 import React from 'react';
-import { StatCard } from './StatCard';
-import { Task } from '../../types';
-import { calculateProductivityScore } from '../../utils/taskStats';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
-interface ProductivityScoreProps {
-  tasks: Task[];
+interface Task {
+  status: string;
 }
 
-export const ProductivityScore: React.FC<ProductivityScoreProps> = ({ tasks }) => {
-  const score = calculateProductivityScore(tasks);
+interface Habit {
+  completedToday: boolean;
+}
+
+interface ProductivityScoreProps {
+  tasks: Task[] | null | undefined;
+  habits: Habit[] | null | undefined;
+}
+
+export const ProductivityScore: React.FC<ProductivityScoreProps> = ({ tasks = [], habits = [] }) => {
+  const calculateScore = () => {
+    const completedTasks = tasks.filter((task) => task.status === 'completed').length;
+    const completedHabits = habits.filter((habit) => habit.completedToday).length;
+    const totalItems = tasks.length + habits.length;
+
+    if (totalItems === 0) {
+      return 0; // Avoid division by zero when there are no tasks or habits
+    }
+
+    return Math.round(((completedTasks + completedHabits) / totalItems) * 100);
+  };
+
+  const score = calculateScore();
 
   return (
-    <StatCard title="Productivity Score">
-      <div className="text-center">
-        <p className="text-3xl font-bold text-primary-600">{score}%</p>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-          Overall Completion Rate
-        </p>
-      </div>
-    </StatCard>
+    <Card className="bg-cyberpunk-800 border-cyberpunk-600">
+      <CardHeader>
+        <CardTitle className="text-cyberpunk-accent">Productivity Score</CardTitle>
+      </CardHeader>
+      <CardContent className="flex justify-center">
+        <div style={{ width: 200, height: 200 }}>
+          <CircularProgressbar
+            value={score}
+            text={`${score}%`}
+            styles={buildStyles({
+              textColor: '#ff00ff',
+              pathColor: '#ff00ff',
+              trailColor: '#0a0a1e',
+            })}
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 };

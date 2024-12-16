@@ -1,37 +1,47 @@
 import React from 'react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
-import { Card } from '../shared/Card';
-import { Task } from '../../types';
-import { getTaskProgressData } from '../../utils/chartData';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-interface TaskProgressChartProps {
-  tasks: Task[];
-}
+export const TaskProgressChart = ({ tasks }) => {
+  const data = [
+    { name: 'Mon', completed: 0 },
+    { name: 'Tue', completed: 0 },
+    { name: 'Wed', completed: 0 },
+    { name: 'Thu', completed: 0 },
+    { name: 'Fri', completed: 0 },
+    { name: 'Sat', completed: 0 },
+    { name: 'Sun', completed: 0 },
+  ];
 
-export const TaskProgressChart: React.FC<TaskProgressChartProps> = ({ tasks }) => {
-  const data = getTaskProgressData(tasks);
+  tasks.forEach(task => {
+    if (task.status === 'completed') {
+      const day = new Date(task.completedAt).getDay();
+      data[day].completed++;
+    }
+  });
 
   return (
-    <Card title="Task Progress">
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
+    <Card className="bg-cyberpunk-800 border-cyberpunk-600">
+      <CardHeader>
+        <CardTitle className="text-cyberpunk-accent">Weekly Task Progress</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="value" fill="#4F46E5" />
+            <XAxis dataKey="name" stroke="#c0c0c0" />
+            <YAxis stroke="#c0c0c0" />
+            <Tooltip
+              contentStyle={{
+                background: '#070714',
+                border: '1px solid #00ffff',
+                color: '#f0f0f0',
+              }}
+            />
+            <Bar dataKey="completed" fill="#ff00ff" />
           </BarChart>
         </ResponsiveContainer>
-      </div>
+      </CardContent>
     </Card>
   );
 };
+

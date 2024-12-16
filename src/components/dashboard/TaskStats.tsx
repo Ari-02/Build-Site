@@ -1,31 +1,34 @@
 import React from 'react';
-import { StatCard } from './StatCard';
-import { Task } from '../../types';
-import { calculateTaskStats } from '../../utils/taskStats';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { CheckCircle, Circle, XCircle } from 'lucide-react';
 
-interface TaskStatsProps {
-  tasks: Task[];
-}
-
-export const TaskStats: React.FC<TaskStatsProps> = ({ tasks }) => {
-  const stats = calculateTaskStats(tasks);
+export const TaskStats = ({ tasks }) => {
+  const completedTasks = tasks.filter(task => task.status === 'completed').length;
+  const inProgressTasks = tasks.filter(task => task.status === 'in-progress').length;
+  const pendingTasks = tasks.filter(task => task.status === 'pending').length;
 
   return (
-    <StatCard title="Tasks Overview">
-      <div className="space-y-2">
+    <Card className="bg-cyberpunk-800 border-cyberpunk-600">
+      <CardHeader>
+        <CardTitle className="text-cyberpunk-accent">Task Statistics</CardTitle>
+      </CardHeader>
+      <CardContent>
         <div className="flex justify-between items-center">
-          <span className="text-gray-600 dark:text-gray-400">Completed</span>
-          <span className="font-semibold">{stats.completed}</span>
+          <div className="flex items-center">
+            <CheckCircle className="text-green-500 mr-2" />
+            <span className="text-cyberpunk-100">Completed: {completedTasks}</span>
+          </div>
+          <div className="flex items-center">
+            <Circle className="text-yellow-500 mr-2" />
+            <span className="text-cyberpunk-100">In Progress: {inProgressTasks}</span>
+          </div>
+          <div className="flex items-center">
+            <XCircle className="text-red-500 mr-2" />
+            <span className="text-cyberpunk-100">Pending: {pendingTasks}</span>
+          </div>
         </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600 dark:text-gray-400">In Progress</span>
-          <span className="font-semibold">{stats.inProgress}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600 dark:text-gray-400">Todo</span>
-          <span className="font-semibold">{stats.todo}</span>
-        </div>
-      </div>
-    </StatCard>
+      </CardContent>
+    </Card>
   );
 };
+
